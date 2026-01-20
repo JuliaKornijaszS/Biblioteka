@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Biblioteka.Models.Entities.Ksiazka>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Książki</h1>
+
+<p>
+    <a asp-action="Create">Dodaj</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <h5>Tytuł</h5>
+            </th>
+            <th>
+                <h5>Rok wydania</h5>
+            </th>
+            <th>
+                <h5>Autor</h5>
+            </th>
+            <th>
+                <h5>Kategoria</h5>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tytul)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RokWydania)
+            </td>
+            <td>
+                    @item.Autor?.ImieNazwisko
+            </td>
+            <td>
+                    @item.Kategoria?.Nazwa
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Szczegóły</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Kasuj</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
