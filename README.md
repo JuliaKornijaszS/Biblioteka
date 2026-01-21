@@ -1,92 +1,93 @@
-Dokumentacja projektu – System zarządzania biblioteką (Biblioteka) 
+# Dokumentacja projektu – System zarządzania biblioteką 
 
-1. Informacje ogólne 
+> Autor: Julia Kornijasz
 
+---
+
+## Informacje ogólne
+```
 Nazwa projektu: Biblioteka 
-Typ aplikacji: Aplikacja webowa ASP.NET Core MVC 
+Typ aplikacji: Aplikacja webowa ASP.NET Core MVC  
+```
 Technologie: 
+- .NET (ASP.NET Core MVC) 
 
-.NET (ASP.NET Core MVC) 
+- Entity Framework Core 
 
-Entity Framework Core 
+- SQLite 
 
-SQLite 
+- ASP.NET Core Identity (logowanie i role użytkowników) 
 
-ASP.NET Core Identity (logowanie i role użytkowników) 
+- HTML + CSS (Bootstrap) 
 
-HTML + CSS (Bootstrap) 
+Projekt przedstawia prosty system do zarządzania biblioteką, umożliwiający przeglądanie książek, autorów i kategorii oraz zarządzanie nimi przez administratora.  
 
-Projekt przedstawia prosty system do zarządzania biblioteką, umożliwiający przeglądanie książek, autorów i kategorii oraz zarządzanie nimi przez administratora. 
+---
 
- 
+## Wymagania systemowe
 
-2. Wymagania systemowe 
+Do uruchomienia projektu wymagane są:
+- Visual Studio 2022 lub nowsze  
+- .NET SDK 8.0 lub nowszy  
+- Windows / macOS / Linux  
+- Przeglądarka internetowa (Chrome, Edge, Firefox itp.)  
+- Połączenie z Internetem (do pobrania pakietów NuGet przy pierwszym uruchomieniu)
 
-Do uruchomienia projektu wymagane są: 
+---
 
-Visual Studio 2022 lub nowsze 
+## Instalacja projektu
 
-.NET SDK (np. .NET 8.0 lub nowszy) 
+1. Pobierz projekt z repozytorium GitHub  
+   (Code → Download ZIP lub klonowanie repozytorium)
 
-System Windows / macOS / Linux 
+2. Otwórz plik rozwiązania `.sln` w Visual Studio  
 
-Przeglądarka internetowa (Chrome, Edge, Firefox itp.) 
+3. Przy pierwszym uruchomieniu Visual Studio automatycznie przywróci pakiety NuGet  
 
-Połączenie z Internetem (do pobrania pakietów NuGet przy pierwszym uruchomieniu) 
+4. Uruchom projekt przyciskiem **Start**  
 
- 
+5. Aplikacja będzie dostępna pod adresem podobnym do: https://localhost:xxxx/
 
-3. Instalacja projektu 
+---
 
-Pobierz projekt z repozytorium GitHub (np. przez Code → Download ZIP lub klonowanie repozytorium). 
-
-Otwórz plik rozwiązania .sln w Visual Studio. 
-
-Przy pierwszym uruchomieniu Visual Studio automatycznie przywróci pakiety NuGet. 
-
-Uruchom projekt przyciskiem Start w Visual Studio. 
-
-Po uruchomieniu aplikacja otwiera się w przeglądarce pod adresem podobnym do: https://localhost:xxxx/ 
- 
- 
-
-4. Konfiguracja bazy danych 
+## Konfiguracja bazy danych
 
 Aplikacja korzysta z lokalnej bazy danych SQLite. 
 
 Łańcuch połączenia znajduje się w pliku: 
 
-appsettings.json 
+> appsettings.json 
  
 
 Przykład konfiguracji: 
 
+```
 "ConnectionStrings": { 
  "DefaultConnection": "Data Source=biblioteka.db" 
 } 
- 
+```
 
 Plik bazy danych biblioteka.db tworzony jest automatycznie przy pierwszym uruchomieniu aplikacji. 
 
 Baza danych zawiera tabele m.in.: 
 
-Autorzy 
+- Autorzy 
 
-Kategorie 
+- Kategorie 
 
-Ksiazki 
+- Ksiazki 
 
-Wypozyczenia 
+- Wypozyczenia 
 
-AspNetUsers, AspNetRoles (obsługa logowania i ról użytkowników) 
+- AspNetUsers, AspNetRoles (obsługa logowania i ról użytkowników) 
 
+---
  
-
-5. Konta testowe (użytkownicy) 
+## Konta testowe (użytkownicy) 
 
 W aplikacji dostępne są role użytkowników: 
 
-Administrator: 
+**Administrator:** 
 
 Login: julka.kornijasz@gmail.com 
 
@@ -94,15 +95,15 @@ Hasło: Admin123!
 
 Uprawnienia: 
 
-dodawanie, edycja i usuwanie książek 
+- dodawanie, edycja i usuwanie książek 
 
-dodawanie, edycja i usuwanie autorów 
+- dodawanie, edycja i usuwanie autorów 
 
-dodawanie, edycja i usuwanie kategorii 
+- dodawanie, edycja i usuwanie kategorii 
 
-dodawanie, edycja i usuwanie wypożyczeń 
+- dodawanie, edycja i usuwanie wypożyczeń 
 
-Zwykły użytkownik (User): 
+**Zwykły użytkownik (User):**
 
 Login: user@biblioteka.pl 
 
@@ -110,104 +111,102 @@ Hasło: Admin123!
 
 Uprawnienia: 
 
-Może przeglądać listy i szczegóły 
+- Może przeglądać listy i szczegóły 
 
-Nie ma dostępu do dodawania, edycji i usuwania danych 
+- Nie ma dostępu do dodawania, edycji i usuwania danych
 
- 
+---
 
-6. Opis działania aplikacji (z punktu widzenia użytkownika) 
+## Opis działania aplikacji (z punktu widzenia użytkownika) 
 
-Strona główna 
+**Strona główna**
 
 Po uruchomieniu aplikacji użytkownik widzi listę książek. W górnym menu dostępne są zakładki: 
 
-Książki 
+- Książki 
 
-Autorzy 
+- Autorzy 
 
-Kategorie 
+- Kategorie 
 
-Zaloguj / Wyloguj 
+- Zaloguj / Wyloguj 
 
-Książki 
-
-Użytkownik może: 
-
-przeglądać listę książek 
-
-zobaczyć szczegóły książki (tytuł, rok wydania, autor, kategoria) 
-
-Administrator dodatkowo może: 
-
-dodać nową książkę 
-
-edytować istniejącą książkę 
-
-usunąć książkę 
-
-Autorzy 
+**Książki** 
 
 Użytkownik może: 
 
-przeglądać listę autorów 
+- przeglądać listę książek 
 
-zobaczyć szczegóły autora 
+- zobaczyć szczegóły książki (tytuł, rok wydania, autor, kategoria) 
 
 Administrator dodatkowo może: 
 
-dodawać autorów 
+- dodać nową książkę 
 
-edytować autorów 
+- edytować istniejącą książkę 
 
-usuwać autorów 
+- usunąć książkę 
 
-Kategorie 
+**Autorzy** 
 
 Użytkownik może: 
 
-przeglądać listę kategorii 
+- przeglądać listę autorów 
 
-zobaczyć szczegóły kategorii 
+- zobaczyć szczegóły autora 
 
 Administrator dodatkowo może: 
 
-dodawać kategorie 
+- dodawać autorów 
 
-edytować kategorie 
+- edytować autorów 
 
-usuwać kategorie 
+- usuwać autorów
 
- 
+**Kategorie** 
 
-7. Walidacja danych 
+Użytkownik może:
+
+- przeglądać listę kategorii 
+
+- zobaczyć szczegóły kategorii 
+
+Administrator dodatkowo może: 
+
+- dodawać kategorie 
+
+- edytować kategorie 
+
+- usuwać kategorie
+
+---
+
+## Walidacja danych 
 
 W aplikacji zaimplementowano walidację danych, m.in.: 
 
-Pole Tytuł jest wymagane 
+- Pole Tytuł jest wymagane 
 
-Rok wydania musi mieścić się w zakresie od 1455 do bieżącego roku. 
+- Rok wydania musi mieścić się w zakresie od 1455 do bieżącego roku. 
 
-Formularze pokazują komunikaty błędów przy niepoprawnych danych. 
+- Formularze pokazują komunikaty błędów przy niepoprawnych danych. 
 
 Dzięki temu użytkownik nie może zapisać błędnych informacji do bazy danych. 
 
- 
+---
 
-8. Podsumowanie 
+## Podsumowanie 
 
 Projekt „Biblioteka” jest kompletną aplikacją webową umożliwiającą zarządzanie danymi bibliotecznymi. Zawiera: 
 
-bazę danych 
+- bazę danych 
 
-relacje między encjami 
+- relacje między encjami 
 
-system logowania i ról 
+- system logowania i ról 
 
-zabezpieczenia dostępu 
+- zabezpieczenia dostępu 
 
-walidację danych 
+- walidację danych 
 
-czytelny interfejs użytkownika 
-
- 
+- czytelny interfejs użytkownika 
