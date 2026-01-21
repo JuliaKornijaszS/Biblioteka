@@ -91,17 +91,17 @@ namespace Biblioteka.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Ksiazka ksiazka)
         {
-            var ksiazkaZBazy = _context.Ksiazki.Find(id);
+            var ksiazkaId = _context.Ksiazki.Find(id);
 
-            if (ksiazkaZBazy == null)
+            if (ksiazkaId == null)
                 return NotFound();
 
-            ksiazkaZBazy.Tytul = ksiazka.Tytul;
-            ksiazkaZBazy.RokWydania = ksiazka.RokWydania;
-            ksiazkaZBazy.AutorId = ksiazka.AutorId;
-            ksiazkaZBazy.KategoriaId = ksiazka.KategoriaId;
+            ksiazkaId.Tytul = ksiazka.Tytul;
+            ksiazkaId.RokWydania = ksiazka.RokWydania;
+            ksiazkaId.AutorId = ksiazka.AutorId;
+            ksiazkaId.KategoriaId = ksiazka.KategoriaId;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

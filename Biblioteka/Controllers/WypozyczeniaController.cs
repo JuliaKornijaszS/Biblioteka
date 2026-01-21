@@ -48,7 +48,7 @@ namespace Biblioteka.Controllers
         // GET: Wypozyczenia/Create
         public IActionResult Create()
         {
-            ViewData["KsiazkaId"] = new SelectList(_context.Ksiazki, "Id", "Id");
+            ViewData["KsiazkaId"] = new SelectList(_context.Ksiazki, "Id", "Tytul");
             return View();
         }
 
@@ -57,16 +57,11 @@ namespace Biblioteka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,KsiazkaId,DataWypozyczenia,DataZwrotu")] Wypozyczenie wypozyczenie)
-        {
-            if (ModelState.IsValid)
-            {
+        public async Task<IActionResult> Create(Wypozyczenie wypozyczenie)
+        {            
                 _context.Add(wypozyczenie);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["KsiazkaId"] = new SelectList(_context.Ksiazki, "Id", "Id", wypozyczenie.KsiazkaId);
-            return View(wypozyczenie);
+                return RedirectToAction(nameof(Index));            
         }
 
         // GET: Wypozyczenia/Edit/5
@@ -82,7 +77,7 @@ namespace Biblioteka.Controllers
             {
                 return NotFound();
             }
-            ViewData["KsiazkaId"] = new SelectList(_context.Ksiazki, "Id", "Id", wypozyczenie.KsiazkaId);
+            ViewData["KsiazkaId"] = new SelectList(_context.Ksiazki, "Id", "Tytul", wypozyczenie.KsiazkaId);
             return View(wypozyczenie);
         }
 
@@ -91,35 +86,20 @@ namespace Biblioteka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,KsiazkaId,DataWypozyczenia,DataZwrotu")] Wypozyczenie wypozyczenie)
+        public async Task<IActionResult> Edit(int id, Wypozyczenie wypozyczenie)
         {
-            if (id != wypozyczenie.Id)
-            {
-                return NotFound();
-            }
+            var wypozyczenieId = _context.Wypozyczenia.Find(id);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(wypozyczenie);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!WypozyczenieExists(wypozyczenie.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["KsiazkaId"] = new SelectList(_context.Ksiazki, "Id", "Id", wypozyczenie.KsiazkaId);
-            return View(wypozyczenie);
+            if (wypozyczenieId == null)
+                return NotFound();
+
+            wypozyczenieId.KsiazkaId = wypozyczenie.KsiazkaId;
+            wypozyczenieId.DataWypozyczenia = wypozyczenie.DataWypozyczenia;
+            wypozyczenieId.DataZwrotu = wypozyczenie.DataZwrotu;
+            await _context.SaveChangesAsync();
+                
+            return RedirectToAction(nameof(Index));
+            
         }
 
         // GET: Wypozyczenia/Delete/5
