@@ -1,74 +1,100 @@
 using Biblioteka.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// DbContext
 builder.Services.AddDbContext<BibliotekaContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
+// Identity
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<BibliotekaContext>();
+
+// MVC
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
+// Routing
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Ksiazki}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Ksiazki}/{action=Index}/{id?}");
 
+// Seed danych (autorzy, kategorie, role)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<Biblioteka.Models.BibliotekaContext>();
+    var context = services.GetRequiredService<BibliotekaContext>();
 
-    // Upewniamy siê, ¿e baza istnieje
     context.Database.EnsureCreated();
 
-    // Autorzy
     if (!context.Autorzy.Any())
     {
-        context.Autorzy.Add(new Biblioteka.Models.Entities.Autor
-        {
-            ImieNazwisko = "Adam Mickiewicz"
-        });
-
-        context.Autorzy.Add(new Biblioteka.Models.Entities.Autor
-        {
-            ImieNazwisko = "Henryk Sienkiewicz"
-        });
+        context.Autorzy.AddRange(
+            new Biblioteka.Models.Entities.Autor { ImieNazwisko = "Adam Mickiewicz" },
+            new Biblioteka.Models.Entities.Autor { ImieNazwisko = "Henryk Sienkiewicz" }
+        );
     }
 
-    // Kategorie
     if (!context.Kategorie.Any())
     {
-        context.Kategorie.Add(new Biblioteka.Models.Entities.Kategoria
-        {
-            Nazwa = "Powieœæ"
-        });
+        context.Kategorie.AddRange(
+            new Biblioteka.Models.Entities.Kategoria { Nazwa = "Powieœæ" },
+            new Biblioteka.Models.Entities.Kategoria { Nazwa = "Fantastyka" }
+        );
+    }
 
-        context.Kategorie.Add(new Biblioteka.Models.Entities.Kategoria
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roles = { "Admin", "User" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
         {
-            Nazwa = "Fantastyka"
-        });
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    var adminEmail = "admin@biblioteka.pl";
+    var admin = await userManager.FindByEmailAsync(adminEmail);
+
+    if (admin == null)
+    {
+        var user = new ApplicationUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail
+        };
+
+        await userManager.CreateAsync(user, "Admin123!");
+        await userManager.AddToRoleAsync(user, "Admin");
     }
 
     context.SaveChanges();
 }
-
 
 app.Run();

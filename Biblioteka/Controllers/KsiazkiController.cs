@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Biblioteka.Models;
+using Biblioteka.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Biblioteka.Models;
-using Biblioteka.Models.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Biblioteka.Controllers
 {
+    [Authorize]
     public class KsiazkiController : Controller
     {
         private readonly BibliotekaContext _context;
@@ -47,6 +49,7 @@ namespace Biblioteka.Controllers
         }
 
         // GET: Ksiazki/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["AutorId"] = new SelectList(_context.Autorzy, "Id", "ImieNazwisko");
@@ -67,6 +70,7 @@ namespace Biblioteka.Controllers
         }
 
         // GET: Ksiazki/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,6 +93,7 @@ namespace Biblioteka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Ksiazka ksiazka)
         {
             var ksiazkaId = _context.Ksiazki.Find(id);
@@ -107,6 +112,7 @@ namespace Biblioteka.Controllers
         }
 
         // GET: Ksiazki/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,6 +135,7 @@ namespace Biblioteka.Controllers
         // POST: Ksiazki/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ksiazka = await _context.Ksiazki.FindAsync(id);

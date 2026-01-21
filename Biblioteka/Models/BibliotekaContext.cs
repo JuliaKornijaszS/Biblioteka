@@ -1,9 +1,11 @@
 ﻿using Biblioteka.Models.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace Biblioteka.Models
 {
-    public class BibliotekaContext : DbContext
+    public class BibliotekaContext : IdentityDbContext<ApplicationUser>
     {
         public BibliotekaContext(DbContextOptions<BibliotekaContext> options)
             : base(options)
