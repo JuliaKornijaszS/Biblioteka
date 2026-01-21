@@ -35,6 +35,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Wypozyczenia" asp-action="Index">Wypożyczenia</a>
                         </li>
+
+                    </ul>
+
+                    <!-- PRAWA STRONA: LOGOWANIE -->
+                    <ul class="navbar-nav">
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link text-dark">
+                                    Zalogowany: @User.Identity.Name
+                                </span>
+                            </li>
+
+                            <li class="nav-item">
+                                <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
+                                    <button type="submit" class="nav-link btn btn-link text-dark">Wyloguj</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Zaloguj</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

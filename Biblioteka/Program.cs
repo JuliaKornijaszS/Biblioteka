@@ -16,6 +16,20 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<BibliotekaContext>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.LogoutPath = "/Identity/Account/Logout";
+    options.AccessDeniedPath = "/Ksiazki";
+});
+
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Login");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Register");
+});
+
 // MVC
 builder.Services.AddControllersWithViews();
 
@@ -41,6 +55,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ksiazki}/{action=Index}/{id?}");
 
+app.MapRazorPages();
+
 // Seed danych (autorzy, kategorie, role)
 using (var scope = app.Services.CreateScope())
 {
@@ -60,7 +76,7 @@ using (var scope = app.Services.CreateScope())
     if (!context.Kategorie.Any())
     {
         context.Kategorie.AddRange(
-            new Biblioteka.Models.Entities.Kategoria { Nazwa = "Powieœæ" },
+            new Biblioteka.Models.Entities.Kategoria { Nazwa = "PowieÅ›Ä‡" },
             new Biblioteka.Models.Entities.Kategoria { Nazwa = "Fantastyka" }
         );
     }
@@ -79,7 +95,7 @@ using (var scope = app.Services.CreateScope())
 
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    var adminEmail = "admin@biblioteka.pl";
+    var adminEmail = "julka.kornijasz@gmail.com";
     var admin = await userManager.FindByEmailAsync(adminEmail);
 
     if (admin == null)

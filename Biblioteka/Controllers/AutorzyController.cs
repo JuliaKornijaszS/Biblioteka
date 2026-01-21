@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Biblioteka.Models;
+using Biblioteka.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Biblioteka.Models;
-using Biblioteka.Models.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Biblioteka.Controllers
 {
+    [Authorize]
     public class AutorzyController : Controller
     {
         private readonly BibliotekaContext _context;
@@ -44,6 +46,7 @@ namespace Biblioteka.Controllers
         }
 
         // GET: Autorzy/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +57,7 @@ namespace Biblioteka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,ImieNazwisko")] Autor autor)
         {
             if (ModelState.IsValid)
@@ -66,6 +70,7 @@ namespace Biblioteka.Controllers
         }
 
         // GET: Autorzy/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +91,7 @@ namespace Biblioteka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ImieNazwisko")] Autor autor)
         {
             if (id != autor.Id)
@@ -117,6 +123,7 @@ namespace Biblioteka.Controllers
         }
 
         // GET: Autorzy/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +144,7 @@ namespace Biblioteka.Controllers
         // POST: Autorzy/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var autor = await _context.Autorzy.FindAsync(id);
